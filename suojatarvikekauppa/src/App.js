@@ -1,22 +1,23 @@
 import logo from './logo.svg';
 import './App.css';
 import MenuItems from './components/Navbar/MenuItems';
+import ReactDOM from 'react-dom'
+import React, { useState } from 'react'
 
 function App() {
-  const click = () => {
-    alert("testi");
-  }
-  console.log(MenuItems.MenuItems.length)
-  let items = MenuItems.MenuItems.map((item,index) =>{
-    console.log(item);
-    return (<li onClick={click}>{item.title}</li>);
-  })
-  console.log(items)
+  const [selectedItem, setSelectedItem] = useState();
   return (
     <div className="App">
       <div className="content">
         <h1>Suojavarustekauppa</h1>
-        {items}
+        {MenuItems.MenuItems.map((item, index) => (
+          <li key={index} onClick={() => setSelectedItem(item.title)}
+          style={{cursor: "pointer"}}>{item.title}</li>
+        ))}
+        {selectedItem && (
+          <h1 style={{textAlign: 'center'}}>{selectedItem}</h1>
+        )}
+
       </div>
     </div>
     
