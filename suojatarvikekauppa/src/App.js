@@ -1,5 +1,5 @@
-import logo from './logo.svg';
 import './App.css';
+import Maskit from './components/ItemCategory1/index'
 import MenuItems from './components/Navbar/MenuItems';
 import ReactDOM from 'react-dom'
 import React, { useState } from 'react'
@@ -17,6 +17,11 @@ function App() {
         {selectedItem && (
           <h1 style={{textAlign: 'center'}}>{selectedItem}</h1>
         )}
+        {selectedItem == 'Maskit' &&
+        <div>
+          <Maskit/>
+        </div>
+        }
 
       </div>
     </div>
