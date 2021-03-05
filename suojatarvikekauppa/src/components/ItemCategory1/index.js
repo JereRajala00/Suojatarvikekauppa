@@ -1,15 +1,11 @@
-// import image1 from '../resources/images/ffp3.jpg'
+import React from 'react'
 
-function Maskit() {
-    return (
-      <div>
-        <img src={require('../resources/images/ffp3.jpg')} />
-        <h3>FFP3 Mask</h3>
-      </div>
-    )
-  }
-//function Testi() {
+    function Contacts() {
+      render ()
+      return (<div> 
+        {this.state.contacts.map(contacts => 
+            <div key={contacts.name}> {contacts.birth_date} </div>)}
+        </div>)
+    }
 
-//}
-  export default Maskit
-  //export {Testi}
+    export default Contacts
