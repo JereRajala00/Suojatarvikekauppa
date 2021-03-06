@@ -1,0 +1,8 @@
+CREATE DATABASE suojatarvikekauppa;
+USE suojatarvikekauppa;
+CREATE TABLE Products (
+ProductID int NOT NULL,
+ProductName varchar(255) NOT NULL,
+ProductDescription VARCHAR(2000) NOT NULL,
+ProductQuantity INT NOT NULL
+);
