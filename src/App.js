@@ -1,7 +1,9 @@
 import './App.css';
-import MenuItems from './components/Navbar/MenuItems';
 import ReactDOM from 'react-dom'
 import React, { useState } from 'react'
+import Header from './header';
+import Footer from './footer.js';
+import MenuItems from './components/Navbar/MenuItems';
 
 function App() {
   
@@ -10,18 +12,34 @@ function App() {
   return (
     <div className="App">
       <div className="content">
-        <h1>Suojavarustekauppa</h1>
+      <Header></Header>
+      <div className='navbar'>
         {MenuItems.MenuItems.map((item, index) => (
           <li key={index} onClick={() => setSelectedItem(item.title)}
           style={{cursor: "pointer"}}>{item.title}</li>
         ))}
         {selectedItem && (
-          <h1 style={{textAlign: 'center'}}>{selectedItem}</h1>
+          <h1>{selectedItem}</h1>
         )}
         {selectedItem == 'Maskit' &&
           <div><h1><GetProductsHtml/></h1></div>
         }
+        </div>
 
+      <p>Tervetuloa suojatarvikekauppaan!<br></br>
+
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br></br>
+
+      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      <br></br>
+
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br></br>
+      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      <br></br>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br></br>
+      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      </p>
+  	    <Footer></Footer>
       </div>
     </div>
     
