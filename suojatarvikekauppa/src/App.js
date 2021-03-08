@@ -1,15 +1,19 @@
 import './App.css';
 import MenuItems from './components/Navbar/MenuItems';
-import ReactDOM from 'react-dom'
-import React, { useState } from 'react'
+import ReactDOM from 'react-dom';
+import React, { useState } from 'react';
+import { createStore } from 'redux';
+import {AddItemToCart, DeleteItemFromCart, Counter} from './cart.js';
 
 function App() {
-  
+  let store = createStore(Counter);
+  store.subscribe(() => console.log(store.getState()));
   const [selectedItem, setSelectedItem] = useState()
   const [products, setProducts] = useState([])
   return (
     <div className="App">
       <div className="content">
+      
         <h1>Suojavarustekauppa</h1>
         {MenuItems.MenuItems.map((item, index) => (
           <li key={index} onClick={() => setSelectedItem(item.title)}
@@ -44,9 +48,12 @@ function GetProductsHtml() {
         <h2>{products.ProductName}</h2>
         <h2>{products.ProductDescription}</h2>
         <h2>{products.ProductQuantity} units available</h2>
+        <button onClick="store.dispatch(AddItemToCart())">Add to cart</button>
+        <button onClick="store.subscribe(() => console.log(store.getState()));">Show cart</button>
         </div>
     );
 }
+
 }
 
 export default App;
