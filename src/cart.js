@@ -6,12 +6,12 @@ import ReactDOM from 'react-dom';
 
 export const AddItemToCart = () => {
     return {
-        name: 'ADDITEMTOCART'
+        type: 'ADDITEMTOCART'
     }
 }
 export const DeleteItemFromCart = () => {
     return {
-        name: 'DELETEITEMFROMCART'
+        type: 'DELETEITEMFROMCART'
     }
 }
 export const Counter = (state = 0, action) => {

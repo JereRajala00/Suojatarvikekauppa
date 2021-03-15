@@ -9,9 +9,11 @@ import Footer from './footer.js';
 
 function App() {
   let store = createStore(Counter);
-  store.subscribe(() => console.log(store.getState()));
+  //store.subscribe(() => console.log(store.getState()));
+  //store.dispatch(AddItemToCart())
   const [selectedItem, setSelectedItem] = useState()
   const [products, setProducts] = useState([])
+  const [isLoaded, setStateToLoaded] = useState(false)
   return (
     <div className="App">
       <div className="content">
@@ -26,8 +28,8 @@ function App() {
         {selectedItem && (
           <h1>{selectedItem}</h1>
         )}
-        {selectedItem == 'Maskit' &&
-          <div><h1><GetProductsHtml/></h1></div>
+        {(selectedItem == 'Maskit') &&
+          <div><GetProductsHtml/></div>
         }
         </div>
 
@@ -51,24 +53,35 @@ function App() {
   );
   
   async function initProducts() {
-    fetch(`http://127.0.0.1:5000/listProducts`)
-        .then(response => response.json())
-        .then(response => {
-            setProducts(response.result);
-            console.log(response.result);
-        
+    if (!isLoaded) {
+      fetch(`http://127.0.0.1:5000/listProducts`)
+      .then(response => response.json())
+      .then(response => {
+          setProducts(response.result);
+          console.log(response.result);
+          setStateToLoaded(true);
+  }
+      )
     }
-        )}
+    }
 
 function GetProductsHtml() {
     initProducts()
+    const AddItem = () => {
+      console.log("Testi");
+      store.subscribe(() => console.log(store.getState()));
+      store.dispatch(AddItemToCart())
+    }
+    //store.dispatch(AddItemToCart())
+    //store.subscribe(() => console.log(store.getState()))
     return products.map(products =>
-      <div>
+      <div key={products.ProductID}>
         <h2>{products.ProductName}</h2>
         <h2>{products.ProductDescription}</h2>
         <h2>{products.ProductQuantity} units available</h2>
-        <button onClick="store.dispatch(AddItemToCart())">Add to cart</button>
-        <button onClick="store.subscribe(() => console.log(store.getState()));">Show cart</button>
+        
+        <button onClick={AddItem}>Add to cart</button>
+        <button onClick={AddItem}>Show cart</button>
         </div>
     );
 }
