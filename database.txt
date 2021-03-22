@@ -1,8 +1,19 @@
 CREATE DATABASE suojatarvikekauppa;
 USE suojatarvikekauppa;
+
 CREATE TABLE Products (
 ProductID int NOT NULL,
 ProductName varchar(255) NOT NULL,
 ProductDescription VARCHAR(2000) NOT NULL,
 ProductQuantity INT NOT NULL
+);
+
+CREATE TABLE Customers (
+    CustomerID int,
+    FirstName varchar(15),
+    LastName varchar(30),
+    Address varchar(50),
+    Email varchar(50),
+    Phone varchar(15),
+    Password varchar(64)
 );

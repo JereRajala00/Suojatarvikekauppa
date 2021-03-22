@@ -31,6 +31,15 @@ function App() {
         {(selectedItem == 'Maskit') &&
           <div><GetProductsHtml/></div>
         }
+        {(selectedItem == 'Ostoskori') &&
+          <div><PlaceOrder/></div>
+        }
+        {(selectedItem == 'Rekisteröidy') &&
+          <div><RegisterAccount/></div>
+        }
+        {(selectedItem == 'Kirjaudu sisään') &&
+          <div><LoginForm/></div>
+        }
         </div>
 
       <p>Tervetuloa suojatarvikekauppaan!<br></br>
@@ -84,6 +93,55 @@ function GetProductsHtml() {
         <button onClick={AddItem}>Show cart</button>
         </div>
     );
+}
+function PlaceOrder() {
+  return (
+  <div>
+  <form action="http://127.0.0.1:5000/placeOrder" method="post">
+  First name:<br/>
+  <input type="text" name="firstname"/><br/>
+  Last name:<br/>
+  <input type="text" name="lastname"/><br/>
+  Address:<br/>
+  <input type="text" name="address"/><br/>
+  <input type="submit" value="Submit"/>
+  </form>
+</div>
+  );
+}
+function RegisterAccount() {
+  return (
+    <div>
+    <form action="http://127.0.0.1:5000/registerAccount" method="post">
+    Etunimi:<br/>
+    <input type="text" name="firstname"/><br/>
+    Sukunimi:<br/>
+    <input type="text" name="lastname"/><br/>
+    Osoite:<br/>
+    <input type="text" name="address"/><br/>
+    Sähköposti:<br/>
+    <input type="text" name="email"/><br/>
+    Puhelin:<br/>
+    <input type="text" name="phone"/><br/>
+    Salasana:<br/>
+    <input type="password" name="password"/><br/>
+    <input type="submit" value="Submit"/>
+    </form>
+    </div>
+  );
+}
+function LoginForm() {
+  return (
+    <div>
+    <form action="http://127.0.0.1:5000/login" method="post">
+    Sähköposti:<br/>
+    <input type="text" name="email"/><br/>
+    Salasana:<br/>
+    <input type="password" name="password"/><br/>
+    <input type="submit" value="Submit"/>
+    </form>
+    </div>
+  );
 }
 
 }

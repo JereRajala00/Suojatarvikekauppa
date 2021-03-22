@@ -19,5 +19,15 @@ const MenuItems = [
         url: '#',
         cName: 'nav-links'
     },
+    {
+        title: 'Rekisteröidy',
+        url: '#',
+        cName: 'nav-links'
+    },
+    {
+        title: 'Ostoskori',
+        url: '#',
+        cName: 'nav-links'
+    },
 ]
 export default {MenuItems}
