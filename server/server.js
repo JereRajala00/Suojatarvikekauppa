@@ -1,6 +1,7 @@
 var mysql = require('mysql');
 var express = require('express');
 var cors = require('cors');
+var crypto = require('crypto');
 var app = express();
 var bodyParser = require('body-parser');
 const http = require('http');
@@ -47,6 +48,9 @@ app.get('/listProducts', function (req, res) {
      res.send("Order successfully placed");
    });
  });
+ function hashPassword(password_input) {
+  return crypto.createHash("sha256").update(password_input).digest("hex");
+}
  app.post('/registerAccount', function (req, res) {
   var createAccount = {
     FirstName: req.body.firstname,
@@ -56,7 +60,9 @@ app.get('/listProducts', function (req, res) {
     Phone: req.body.phone,
     Password: req.body.password
    }
+   createAccount.Password = hashPassword(createAccount.Password);
    console.log(createAccount);
+   //console.log(hashPassword(createAccount.Password));
    con.query("INSERT INTO Customers SET ?", createAccount, function (err, response) {
      res.send("Account successfully created!");
    });
@@ -66,6 +72,7 @@ app.get('/listProducts', function (req, res) {
     Email: req.body.email,
     Password: req.body.password,
   }
+  loginCredentials.Password = hashPassword(loginCredentials.Password);
   console.log(loginCredentials);
   CheckPassword(loginCredentials, returnResult);
 

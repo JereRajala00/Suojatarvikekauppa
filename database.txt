@@ -15,5 +15,5 @@ CREATE TABLE Customers (
     Address varchar(50),
     Email varchar(50),
     Phone varchar(15),
-    Password varchar(64)
+    Password varchar(300)
 );
