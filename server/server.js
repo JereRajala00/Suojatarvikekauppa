@@ -1,5 +1,6 @@
 var mysql = require('mysql');
 var express = require('express');
+var cookie_parser = require('cookie-parser');
 var cors = require('cors');
 var crypto = require('crypto');
 var app = express();
@@ -23,6 +24,7 @@ var con = mysql.createConnection({
   database: "suojatarvikekauppa"
 });
 app.use(cors({origin: '*'}));
+app.use(cookie_parser('mysecretkey'));
 app.get('/listProducts', function (req, res) {
     if (connected == false) {
       con.connect()
@@ -91,10 +93,20 @@ app.get('/listProducts', function (req, res) {
       res.send(`Database error: ${result}`);
     } else {
       if (result.length > 0 && loginCredentials.Password == result[0].Password) {
-        res.send("Login successfull");
+        res.cookie('user', loginCredentials.Email, {signed: true});
+        res.redirect("http://localhost:3000/");
       } else {
         res.send("Login failed: incorrect email or password");
       }
     }
   }
+  app.get('/adminPanel', function (req, res) {
+      var auth_cookie = req.signedCookies.user;
+      console.log(auth_cookie);
+      if (auth_cookie == 'admin@student.jamk.fi') {
+        res.send('Authentication successful');
+      } else {
+        res.send('ei toimi');
+      }
+  });
 });

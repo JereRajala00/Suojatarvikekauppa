@@ -40,6 +40,9 @@ function App() {
         {(selectedItem == 'Kirjaudu sisään') &&
           <div><LoginForm/></div>
         }
+        {(selectedItem == 'Admin') &&
+          <div><AdminPanel/></div>
+        }
         </div>
 
       <p>Tervetuloa suojatarvikekauppaan!<br></br>
@@ -107,6 +110,13 @@ function PlaceOrder() {
   <input type="submit" value="Submit"/>
   </form>
 </div>
+  );
+}
+function AdminPanel() {
+  return (
+    <form action="http://127.0.0.1:5000/adminPanel" method="get">
+    <input type="submit" value="Submit"/>
+    </form>
   );
 }
 function RegisterAccount() {

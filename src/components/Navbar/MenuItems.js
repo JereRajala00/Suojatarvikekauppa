@@ -29,5 +29,10 @@ const MenuItems = [
         url: '#',
         cName: 'nav-links'
     },
+    {
+        title: 'Admin',
+        url: '#',
+        cName: 'nav-links'
+    },
 ]
 export default {MenuItems}
