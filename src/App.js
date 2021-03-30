@@ -3,17 +3,17 @@ import MenuItems from './components/Navbar/MenuItems';
 import ReactDOM from 'react-dom';
 import React, { useState } from 'react';
 import { createStore } from 'redux';
-import {AddItemToCart, DeleteItemFromCart, Counter} from './cart.js';
+import {AddItemToCart, DeleteItemFromCart, ChangeCounter, Counter} from './cart.js';
 import Header from './header';
 import Footer from './footer.js';
 
 function App() {
+  // Intialize Redux store and navbar
   let store = createStore(Counter);
-  //store.subscribe(() => console.log(store.getState()));
-  //store.dispatch(AddItemToCart())
   const [selectedItem, setSelectedItem] = useState()
   const [products, setProducts] = useState([])
   const [isLoaded, setStateToLoaded] = useState(false)
+  // Render content based on user choice
   return (
     <div className="App">
       <div className="content">
@@ -32,7 +32,7 @@ function App() {
           <div><GetProductsHtml/></div>
         }
         {(selectedItem == 'Ostoskori') &&
-          <div><PlaceOrder/></div>
+          <div><ShowBasketContents/></div>
         }
         {(selectedItem == 'Rekisteröidy') &&
           <div><RegisterAccount/></div>
@@ -63,7 +63,7 @@ function App() {
     </div>
     
   );
-  
+  // Function for calling listProducts API method and returning result
   async function initProducts() {
     if (!isLoaded) {
       fetch(`http://127.0.0.1:5000/listProducts`)
@@ -76,42 +76,28 @@ function App() {
       )
     }
     }
-
+// Create HTML based on product information received from database
 function GetProductsHtml() {
     initProducts()
-    const AddItem = () => {
-      console.log("Testi");
+    const AddItem = (ProductID) => {
       store.subscribe(() => console.log(store.getState()));
       store.dispatch(AddItemToCart())
     }
-    //store.dispatch(AddItemToCart())
-    //store.subscribe(() => console.log(store.getState()))
     return products.map(products =>
       <div key={products.ProductID}>
         <h2>{products.ProductName}</h2>
         <h2>{products.ProductDescription}</h2>
         <h2>{products.ProductQuantity} units available</h2>
         
-        <button onClick={AddItem}>Add to cart</button>
-        <button onClick={AddItem}>Show cart</button>
+        <button onClick={AddItem(products.ProductID)}>Add to cart</button>
         </div>
     );
 }
-function PlaceOrder() {
-  return (
-  <div>
-  <form action="http://127.0.0.1:5000/placeOrder" method="post">
-  First name:<br/>
-  <input type="text" name="firstname"/><br/>
-  Last name:<br/>
-  <input type="text" name="lastname"/><br/>
-  Address:<br/>
-  <input type="text" name="address"/><br/>
-  <input type="submit" value="Submit"/>
-  </form>
-</div>
-  );
+// Function for displaying shopping cart contents (under development)
+function ShowBasketContents() {
+    console.log(store.getState());
 }
+// Function for calling adminPanel API call, under development
 function AdminPanel() {
   return (
     <form action="http://127.0.0.1:5000/adminPanel" method="get">
@@ -119,6 +105,7 @@ function AdminPanel() {
     </form>
   );
 }
+// Function for generating HTML form for account registration
 function RegisterAccount() {
   return (
     <div>
@@ -140,6 +127,7 @@ function RegisterAccount() {
     </div>
   );
 }
+// Function for generating HTML form for account login
 function LoginForm() {
   return (
     <div>

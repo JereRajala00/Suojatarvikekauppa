@@ -1,3 +1,4 @@
+// Load required modules
 var mysql = require('mysql');
 var express = require('express');
 var cookie_parser = require('cookie-parser');
@@ -11,20 +12,23 @@ var connected = false;
 const hostname = '127.0.0.1';
 const port = 5000;
 
+// Server listens port 5000 by default
 var server = app.listen(5000, function () {
     var host = server.address().address
     var port = server.address().port
     console.log("Node server is listening for requests...", host, port)
  })
-
+// Connect to MySQL database
 var con = mysql.createConnection({
   host: "192.168.8.117",
   user: "tkuser1",
   password: "sala",
   database: "suojatarvikekauppa"
 });
+// Activate cookie_parser for signed cookies (needed for authentication)
 app.use(cors({origin: '*'}));
 app.use(cookie_parser('mysecretkey'));
+// listProducts API method for fetching product information from database
 app.get('/listProducts', function (req, res) {
     if (connected == false) {
       con.connect()
@@ -38,11 +42,12 @@ app.get('/listProducts', function (req, res) {
  })
  app.use(bodyParser.json());
  app.use(bodyParser.urlencoded({ extended: false }));
+ // placeOrder API method for storing order information to database (under development)
  app.post('/placeOrder', function (req, res) {
   var createOrder = {
     OrderID: req.body.firstname,
     CustomerID: req.body.lastname,
-    // OrderID, CustomerID, ProductID, ProductQuantity, Firstname, Lastname, Address, Zip, City, Country
+    // Planned parameters: OrderID, CustomerID, ProductID, ProductQuantity, Firstname, Lastname, Address, Zip, City, Country
     ProductID: req.body.address
    }
    console.log(createOrder);
@@ -50,9 +55,11 @@ app.get('/listProducts', function (req, res) {
      res.send("Order successfully placed");
    });
  });
+ // Function for hashing password using SHA-256
  function hashPassword(password_input) {
   return crypto.createHash("sha256").update(password_input).digest("hex");
 }
+// registerAccount API method for creating an account and storing information to database
  app.post('/registerAccount', function (req, res) {
   var createAccount = {
     FirstName: req.body.firstname,
@@ -64,11 +71,11 @@ app.get('/listProducts', function (req, res) {
    }
    createAccount.Password = hashPassword(createAccount.Password);
    console.log(createAccount);
-   //console.log(hashPassword(createAccount.Password));
    con.query("INSERT INTO Customers SET ?", createAccount, function (err, response) {
      res.send("Account successfully created!");
    });
  });
+ // login API method for logging in to existing account
  app.post('/login', function(req, res) {
   var loginCredentials = {
     Email: req.body.email,
@@ -77,7 +84,7 @@ app.get('/listProducts', function (req, res) {
   loginCredentials.Password = hashPassword(loginCredentials.Password);
   console.log(loginCredentials);
   CheckPassword(loginCredentials, returnResult);
-
+  // Function used by login API method to fetch password hash by email address from database
   function CheckPassword(loginCredentials, callback) {
     con.query("SELECT Password FROM Customers WHERE Email =?", loginCredentials.Email, function(err, result) {
       if (!err) {
@@ -87,7 +94,8 @@ app.get('/listProducts', function (req, res) {
       }
     })
   }
-
+  // Function for returning the login result
+  // if login is successful, redirect user to front page
   function returnResult(error, result) {
     if (error) {
       res.send(`Database error: ${result}`);
@@ -100,6 +108,8 @@ app.get('/listProducts', function (req, res) {
       }
     }
   }
+  // adminPanel API method for accessing the control panel of web store
+  // currently under development
   app.get('/adminPanel', function (req, res) {
       var auth_cookie = req.signedCookies.user;
       console.log(auth_cookie);

@@ -1,26 +1,41 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-//import App from './App';
-//import ReactRedux from 'react-redux';
-//import {createStore} from 'redux';
 
-export const AddItemToCart = () => {
+// Redux function for adding item to cart
+export const AddItemToCart = (productID) => {
     return {
-        type: 'ADDITEMTOCART'
+        type: 'ADDITEMTOCART',
+        productID
     }
 }
-export const DeleteItemFromCart = () => {
+// Redux function for deleting item from cart
+export const DeleteItemFromCart = (productID) => {
     return {
-        type: 'DELETEITEMFROMCART'
+        type: 'DELETEITEMFROMCART',
+        productID
     }
 }
-export const Counter = (state = 0, action) => {
+// Redux reducer
+export const Counter = (state = [], action) => {
     switch (action.type) {
         case 'ADDITEMTOCART':
-            return state + 1;
+            let itemIndex = state.findIndex(x => x.productID == action.productID);
+           if(itemIndex != -1){
+             state.push({
+               key:   action.productID,
+               value: value + 1
+             });
+            } else {
+              state[itemIndex].value +=1; 
+             }
+            return [...state];
         case 'DELETEITEMFROMCART':
-            return state - 1;
+            let itemIndex = state.findIndex(x => x.productID == action.productID);
+            state[itemIndex].value -=1;
+            if(state[itemIndex].value == 0){
+              state.splice(itemIndex, 1);
+            }
+            return [...state];
     }
 }
-//let store = createStore(Counter);
-//store.subscribe(() => console.log(store.getState()));
+
