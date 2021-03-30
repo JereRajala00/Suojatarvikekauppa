@@ -1,23 +1,47 @@
-import logo from './logo.svg';
 import './App.css';
-import MainMenu from './MainMenu';
-import Header from './Header';
-import Footer from './Footer';
+import maskimage1 from './img/maskit.jpg';
+import maskimage2 from './img/kangasmaski.jpg';
 
-function App() {
+const Masks = () => {
   return (
-    <div className="App">
-      <div className="content">
-      <Header></Header>
-      <MainMenu></MainMenu>
+      <div className='page-content'>
+      <h3>Maskit</h3>
+      <p>Meiltä saat kertakäyttöisiä, sekä kangasmaskeja.</p>
+      <div className='product-grid'>
+        <div className='product-box'>
+          <img src={maskimage1} alt='mask1'></img>
+          <h4>Kertakäyttömaskit - 10kpl</h4>
+          <p>123 €</p>
+        </div>
+        <div className='product-box'>
+          <img src={maskimage1} alt='mask1'></img>
+          <h4>Kertakäyttömaskit - 25kpl</h4>
+          <p>123 €</p>
+        </div>
+        <div className='product-box'>
+          <img src={maskimage1} alt='mask1'></img>
+          <h4>Kertakäyttömaskit - 50kpl</h4>
+          <p>123 €</p>
+        </div>
 
-      <p>Maskit
-      </p>
-
-      <Footer></Footer>
-    </div>
+        <div className='product-box'>
+          <img src={maskimage2} alt='mask1'></img>
+          <h4>Kangasmaski - 1kpl</h4>
+          <p>123 €</p>
+        </div>
+        <div className='product-box'>
+          <img src={maskimage2} alt='mask1'></img>
+          <h4>Kangasmaski - 3kpl</h4>
+          <p>123 €</p>
+        </div>
+        <div className='product-box'>
+          <img src={maskimage2} alt='mask1'></img>
+          <h4>Kangasmaski - 6kpl</h4>
+          <p>123 €</p>
+        </div>
+      </div>
   </div>
   );
 }
 
-export default App;
+export default Masks;

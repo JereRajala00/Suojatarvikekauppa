@@ -92,9 +92,39 @@ h3{
   width: 1200px;
   object-fit: cover;
 }
+.page-content{
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.product-grid {
+  max-width: 1000px;
+  height: fit-content;
+  margin: 0 auto;
+  align-self: center;
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
+.product-box{
+  min-width: 300px;
+  height: 350px;
+  border: 0.5px solid rgba(235, 235, 235, 0.986);
+  flex-direction: row;
+  justify-content:flex-start;
+  margin: 10px;
+  padding: 5px;
+}
+.product-box img{
+  width: 250px;
+  margin: 5px;
+}
+
 .footer {
   background-color: rgb(169, 214, 240);
   padding: 10px;
+  height: 100px;
+  text-align: left;
 }
 
 @keyframes App-logo-spin {
