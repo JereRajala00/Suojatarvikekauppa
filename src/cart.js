@@ -16,26 +16,22 @@ export const DeleteItemFromCart = (productID) => {
     }
 }
 // Redux reducer
-export const Counter = (state = [], action) => {
+export const Counter = (state = {}, action) => {
+    console.log(state);
     switch (action.type) {
         case 'ADDITEMTOCART':
-            let itemIndex = state.findIndex(x => x.productID == action.productID);
-           if(itemIndex != -1){
-             state.push({
-               key:   action.productID,
-               value: value + 1
-             });
-            } else {
-              state[itemIndex].value +=1; 
-             }
-            return [...state];
-        case 'DELETEITEMFROMCART':
-            let itemIndex = state.findIndex(x => x.productID == action.productID);
-            state[itemIndex].value -=1;
-            if(state[itemIndex].value == 0){
-              state.splice(itemIndex, 1);
+            console.log(action);
+            return {
+              ...state, // copy all other quanities
+              // update this property by adding 1 to the current quanity
+              // or just add with quantity 1 if it didn't already exist
+              [action.productID]: ( state[action.productID] || 0 ) + 1
             }
-            return [...state];
+        case 'DELETEITEMFROMCART':
+            return {
+              ...state,
+              [action.productID]: ( state[action.productID] || 1 ) - 1
+            }
     }
-}
+  }
 

@@ -3,7 +3,7 @@ import MenuItems from './components/Navbar/MenuItems';
 import ReactDOM from 'react-dom';
 import React, { useState } from 'react';
 import { createStore } from 'redux';
-import {AddItemToCart, DeleteItemFromCart, ChangeCounter, Counter} from './cart.js';
+import {AddItemToCart, DeleteItemFromCart, Counter} from './cart.js';
 import Header from './header';
 import Footer from './footer.js';
 
@@ -79,9 +79,15 @@ function App() {
 // Create HTML based on product information received from database
 function GetProductsHtml() {
     initProducts()
+    //const dispatch = useDispatch();
     const AddItem = (ProductID) => {
+      console.log("testi");
+      console.log(ProductID);
       store.subscribe(() => console.log(store.getState()));
-      store.dispatch(AddItemToCart())
+      store.dispatch(AddItemToCart(ProductID));
+    }
+    const ShowCartContents = () => {
+      console.log(store.getState());
     }
     return products.map(products =>
       <div key={products.ProductID}>
@@ -89,7 +95,9 @@ function GetProductsHtml() {
         <h2>{products.ProductDescription}</h2>
         <h2>{products.ProductQuantity} units available</h2>
         
-        <button onClick={AddItem(products.ProductID)}>Add to cart</button>
+        <button onClick={() => { store.subscribe(() => console.log(store.getState()));
+      store.dispatch(AddItemToCart(products.ProductID));}}>Add to cart</button>
+        <button onClick={ShowCartContents()}>Show cart contents</button>
         </div>
     );
 }
