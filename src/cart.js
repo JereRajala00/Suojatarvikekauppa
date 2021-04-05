@@ -2,17 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 // Redux function for adding item to cart
-export const AddItemToCart = (productID) => {
+export const AddItemToCart = (productName) => {
     return {
         type: 'ADDITEMTOCART',
-        productID
+        productName
     }
 }
 // Redux function for deleting item from cart
-export const DeleteItemFromCart = (productID) => {
+export const DeleteItemFromCart = (productName) => {
     return {
         type: 'DELETEITEMFROMCART',
-        productID
+        productName
     }
 }
 // Redux reducer
@@ -25,13 +25,15 @@ export const Counter = (state = {}, action) => {
               ...state, // copy all other quanities
               // update this property by adding 1 to the current quanity
               // or just add with quantity 1 if it didn't already exist
-              [action.productID]: ( state[action.productID] || 0 ) + 1
+              [action.productName]: ( state[action.productName] || 0 ) + 1
             }
         case 'DELETEITEMFROMCART':
             return {
               ...state,
-              [action.productID]: ( state[action.productID] || 1 ) - 1
+              [action.productName]: ( state[action.productName] || 1 ) - 1
             }
+        default:
+            return state
     }
   }
 

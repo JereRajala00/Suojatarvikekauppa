@@ -6,10 +6,21 @@ import { createStore } from 'redux';
 import {AddItemToCart, DeleteItemFromCart, Counter} from './cart.js';
 import Header from './header';
 import Footer from './footer.js';
+import { render } from "react-dom";
+import { Provider } from "react-redux";
+import { useSelector, useStore } from 'react-redux';
+
+let store = createStore(Counter);
+const rootElement = document.getElementById("root");
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  rootElement
+);
 
 function App() {
   // Intialize Redux store and navbar
-  let store = createStore(Counter);
   const [selectedItem, setSelectedItem] = useState()
   const [products, setProducts] = useState([])
   const [isLoaded, setStateToLoaded] = useState(false)
@@ -32,7 +43,7 @@ function App() {
           <div><GetProductsHtml/></div>
         }
         {(selectedItem == 'Ostoskori') &&
-          <div><ShowBasketContents/></div>
+          <div><ShowCartContents/></div>
         }
         {(selectedItem == 'Rekisteröidy') &&
           <div><RegisterAccount/></div>
@@ -79,16 +90,6 @@ function App() {
 // Create HTML based on product information received from database
 function GetProductsHtml() {
     initProducts()
-    //const dispatch = useDispatch();
-    const AddItem = (ProductID) => {
-      console.log("testi");
-      console.log(ProductID);
-      store.subscribe(() => console.log(store.getState()));
-      store.dispatch(AddItemToCart(ProductID));
-    }
-    const ShowCartContents = () => {
-      console.log(store.getState());
-    }
     return products.map(products =>
       <div key={products.ProductID}>
         <h2>{products.ProductName}</h2>
@@ -96,14 +97,20 @@ function GetProductsHtml() {
         <h2>{products.ProductQuantity} units available</h2>
         
         <button onClick={() => { store.subscribe(() => console.log(store.getState()));
-      store.dispatch(AddItemToCart(products.ProductID));}}>Add to cart</button>
-        <button onClick={ShowCartContents()}>Show cart contents</button>
+      store.dispatch(AddItemToCart(products.ProductName));}}>Add to cart</button>
         </div>
     );
 }
-// Function for displaying shopping cart contents (under development)
-function ShowBasketContents() {
-    console.log(store.getState());
+// Function for displaying shopping cart contents
+function ShowCartContents() {
+  // Convert object to string or JSON before rendering!
+  const cartContentsJSON = JSON.stringify(useStore().getState())
+
+  return (
+    <div>
+        <h2>Ostoskorin sisältö: {cartContentsJSON}</h2>
+      </div>
+  );
 }
 // Function for calling adminPanel API call, under development
 function AdminPanel() {
