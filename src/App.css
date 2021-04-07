@@ -27,14 +27,14 @@
   height:fit-content;
   display: flex;
   flex-direction: column;
-  color:rgb(68, 68, 68);
   margin: 0 auto;
   
 }
 .header h1{
-  font-size: 45px;
+  font-size: 50px;
   margin: 20px 20px;
   float: inline-start;
+  color:rgb(126, 174, 202);
 }
 
 .navbar{
@@ -60,7 +60,7 @@
 }
 
 .navbar li:hover{
-  background-color:rgb(169, 214, 240);
+  background-color:rgb(138, 188, 216);
 }
 .navbar button :active{
   border: none;
@@ -73,6 +73,7 @@
 }
 h3{
   font-size: 24px;
+  color:rgb(126, 174, 202)
 }
 .gallery {
   position: relative;
@@ -96,7 +97,13 @@ h3{
   margin: 0 auto;
   margin-bottom: 20px;
 }
-
+.page-content a {
+  text-decoration: none;
+  color: #3b3b3b;
+}
+.page-content a:visited {
+  color: rgb(168, 168, 168);
+}
 .product-grid {
   max-width: 1000px;
   height: fit-content;
@@ -120,11 +127,67 @@ h3{
   margin: 5px;
 }
 
+.product-page {
+  margin: 20px;
+  text-align: left;
+  flex-direction: row;
+  justify-content: flex-start;
+  min-height: 600px;
+}
+.product-page img {
+  height: 500px;
+  max-width: 500px;
+  display: block;
+  float: left;
+  border: 0.5px solid rgba(236, 236, 236, 0.589);
+}
+.product-desc{
+  display: block;
+  float: left;
+  
+  max-width: 600px;
+  margin: 0 25px;
+}
+.product-desc form{
+  margin: 50px 0;
+}
+.product-desc label {
+  display: inline-block;
+}
+.product-desc input {
+  display: inline-block;
+  margin: 0 5px;
+  border: 0.5px solid rgb(214, 214, 214);
+  padding: 5px;
+}
+#submit {
+  background-color: rgb(138, 188, 216);
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 0 10px;
+  color: #f2f2f2;
+  
+}
 .footer {
-  background-color: rgb(169, 214, 240);
+  background-color: rgb(138, 188, 216);
   padding: 10px;
   height: 100px;
+  justify-content: space-between;
+  color: #f2f2f2;
+}
+.footer li{
+  list-style: none;
+}
+.footer-left{
+  width: 500px;
+  display: inline-block;
   text-align: left;
+}
+.footer-right{
+  width: 500px;
+  display: inline-block;
+  text-align: right; 
 }
 
 @keyframes App-logo-spin {

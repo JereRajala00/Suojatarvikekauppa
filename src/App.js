@@ -6,6 +6,13 @@ import {AddItemToCart, DeleteItemFromCart, Counter} from './cart.js';
 import Header from './Header';
 import Footer from './Footer.js';
 import Masks from './Masks.js';
+import Desit from './Desit.js';
+import Mask1 from './Mask1.js';
+import Mask2 from './Mask2.js';
+import Mask3 from './Mask3.js';
+import FabricMask1 from './FabricMask1.js';
+import FabricMask2 from './FabricMask2.js';
+import FabricMask3 from './FabricMask3.js';
 import { useCycle } from "framer-motion";
 import {maskScene, desiScene, gloveScene} from "./scenes.js";
 import ImageHolder from "./ImageHolder";
@@ -42,9 +49,9 @@ return (
 
       <p>Täältä löydät kaiken tarvitsemasi suojatuaksesi COVID-19 -virukselta.<br></br>
 
-      Tuotteistamme löydät käsidesiä, kasvomaskeja jshaisfjksaf
+      Tuotteistamme löydät käsidesiä j kasvomaskeja.
       <br></br>
-
+      <br></br>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br></br>
       Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
       <br></br>
@@ -77,11 +84,33 @@ function App() {
           <div className='navbar'>
           <li><Link to="/">Etusivu </Link></li>
           <li><Link to='/Masks'>Maskit</Link></li>
+          <li><Link to='/Desit'>Käsidesit</Link></li>
           </div>
 
           <Switch>
             <Route path='/Masks'>
               <Masks />
+            </Route>
+            <Route path='/Mask1'>
+              <Mask1 />
+            </Route>
+            <Route path='/Mask2'>
+              <Mask2 />
+            </Route>
+            <Route path='/Mask3'>
+              <Mask3 />
+            </Route>
+            <Route path='/FabricMask1'>
+              <FabricMask1 />
+            </Route>
+            <Route path='/FabricMask2'>
+              <FabricMask2 />
+            </Route>
+            <Route path='/FabricMask3'>
+              <FabricMask3 />
+            </Route>
+            <Route path='/Desit'>
+              <Desit />
             </Route>
             <Route path="/">
               <Etusivu />
