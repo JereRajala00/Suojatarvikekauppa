@@ -2,28 +2,26 @@ import './App.css';
 import MenuItems from './components/Navbar/MenuItems';
 import ReactDOM from 'react-dom';
 import React, { useState } from 'react';
-import { createStore } from 'redux';
-import {AddItemToCart, DeleteItemFromCart, Counter} from './cart.js';
 import Header from './header';
 import Footer from './footer.js';
-import { render } from "react-dom";
-import { Provider } from "react-redux";
-import { useSelector, useStore } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { AddItemToCart } from './cart';
 
-let store = createStore(Counter);
-const rootElement = document.getElementById("root");
+//let store = createStore(Counter);
+/*const rootElement = document.getElementById("root");
 render(
   <Provider store={store}>
     <App />
   </Provider>,
   rootElement
-);
+);*/
 
 function App() {
   // Intialize Redux store and navbar
   const [selectedItem, setSelectedItem] = useState()
   const [products, setProducts] = useState([])
   const [isLoaded, setStateToLoaded] = useState(false)
+  const [customerInfo, setCustomerInfo] = useState([])
   // Render content based on user choice
   return (
     <div className="App">
@@ -90,27 +88,48 @@ function App() {
 // Create HTML based on product information received from database
 function GetProductsHtml() {
     initProducts()
+    const dispatch = useDispatch();
     return products.map(products =>
       <div key={products.ProductID}>
         <h2>{products.ProductName}</h2>
         <h2>{products.ProductDescription}</h2>
         <h2>{products.ProductQuantity} units available</h2>
         
-        <button onClick={() => { store.subscribe(() => console.log(store.getState()));
-      store.dispatch(AddItemToCart(products.ProductName));}}>Add to cart</button>
+        <button onClick={() => dispatch(AddItemToCart(products.ProductName))}>Add to cart</button>
         </div>
     );
 }
 // Function for displaying shopping cart contents
 function ShowCartContents() {
   // Convert object to string or JSON before rendering!
-  const cartContentsJSON = JSON.stringify(useStore().getState())
+  const state = useSelector((state) => state);
+  const cartContentsJSON = JSON.stringify(state);
 
   return (
     <div>
         <h2>Ostoskorin sisältö: {cartContentsJSON}</h2>
+        <button onClick={() => GetCustomerInfo()}>
+        Proceed
+        </button>
       </div>
   );
+}
+function GetCustomerInfo() {
+  fetch(`http://127.0.0.1:5000/getCustomerInfo`)
+      .then((response) => response.json())
+      .then((response) => {
+        setCustomerInfo(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+      return (
+        <div>
+          <h2>
+            {customerInfo}
+          </h2>
+        </div>
+      );
 }
 // Function for calling adminPanel API call, under development
 function AdminPanel() {

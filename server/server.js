@@ -20,10 +20,12 @@ var server = app.listen(5000, function () {
  })
 // Connect to MySQL database
 var con = mysql.createConnection({
-  host: "192.168.8.117",
-  user: "tkuser1",
-  password: "sala",
-  database: "suojatarvikekauppa"
+  host: "suojatarvikekauppa.mysql.database.azure.com",
+  user: "nodeserver@suojatarvikekauppa",
+  password: "Sala8999",
+  database: "suojatarvikekauppa",
+  port: 3306,
+  ssl: true
 });
 // Activate cookie_parser for signed cookies (needed for authentication)
 app.use(cors({origin: '*'}));
@@ -110,7 +112,7 @@ app.get('/listProducts', function (req, res) {
   }
   // adminPanel API method for accessing the control panel of web store
   // currently under development
-  app.get('/adminPanel', function (req, res) {
+  /*app.get('/adminPanel', function (req, res) {
       var auth_cookie = req.signedCookies.user;
       console.log(auth_cookie);
       if (auth_cookie == 'admin@student.jamk.fi') {
@@ -118,5 +120,21 @@ app.get('/listProducts', function (req, res) {
       } else {
         res.send('ei toimi');
       }
-  });
+  });*/
+});
+app.get('/getCustomerInfo', function (req, res) {
+  var username = req.signedCookies.user;
+  console.log(username);
+  if (username == undefined) {
+    res.send('You are not logged in. Log in to place the order');
+  } else {
+    con.query("SELECT FirstName, LastName, Address, Email, Phone FROM Customers WHERE Email =?", username, function(err, result) {
+      if (!err) {
+        console.log(result);
+        res.send(result);
+      } else {
+        console.log(err);
+      }
+    });
+  }
 });
