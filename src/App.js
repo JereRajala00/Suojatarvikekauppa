@@ -6,15 +6,8 @@ import Header from './header';
 import Footer from './footer.js';
 import { useSelector, useDispatch } from 'react-redux';
 import { AddItemToCart } from './cart';
+import store from './index';
 
-//let store = createStore(Counter);
-/*const rootElement = document.getElementById("root");
-render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  rootElement
-);*/
 
 function App() {
   // Intialize Redux store and navbar
@@ -41,7 +34,7 @@ function App() {
           <div><GetProductsHtml/></div>
         }
         {(selectedItem == 'Ostoskori') &&
-          <div><ShowCartContents/></div>
+          <div><PlaceOrder/></div>
         }
         {(selectedItem == 'Rekisteröidy') &&
           <div><RegisterAccount/></div>
@@ -54,19 +47,6 @@ function App() {
         }
         </div>
 
-      <p>Tervetuloa suojatarvikekauppaan!<br></br>
-
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br></br>
-
-      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-      <br></br>
-
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br></br>
-      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-      <br></br>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br></br>
-      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-      </p>
   	    <Footer></Footer>
       </div>
     </div>
@@ -114,8 +94,12 @@ function ShowCartContents() {
       </div>
   );
 }
+// Function for fetching information of logged user
 function GetCustomerInfo() {
-  fetch(`http://127.0.0.1:5000/getCustomerInfo`)
+  fetch('http://127.0.0.1:5000/getCustomerInfo', {
+    method: 'GET',
+    credentials: 'include'
+  })
       .then((response) => response.json())
       .then((response) => {
         setCustomerInfo(response);
@@ -130,6 +114,48 @@ function GetCustomerInfo() {
           </h2>
         </div>
       );
+}
+function PlaceOrder() {
+  return (
+    <div>
+    Etunimi:<br/>
+    <input type="text" name="firstname" id="order_firstname"/><br/>
+    Sukunimi:<br/>
+    <input type="text" name="lastname" id="order_lastname"/><br/>
+    Osoite:<br/>
+    <input type="text" name="address" id="order_address"/><br/>
+    Sähköposti:<br/>
+    <input type="text" name="email" id="order_email"/><br/>
+    Puhelin:<br/>
+    <input type="text" name="phone" id="order_phone"/><br/>
+    Postinumero:<br/>
+    <input type="number" name="zip" id="order_zip"/><br/>
+    Kaupunki:<br/>
+    <input type="text" name="city" id="order_city"/><br/>
+    <button onClick={() => SubmitOrder()}></button>
+    </div>
+  );
+}
+function SubmitOrder() {
+  console.log(store.getState());
+  const cartContents = JSON.stringify(store.getState());
+  fetch('http://127.0.0.1:5000/placeOrder', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      firstname: document.getElementById("order_firstname").value,
+      lastname: document.getElementById("order_lastname").value,
+      address: document.getElementById("order_address").value,
+      zip: document.getElementById("order_zip").value,
+      city: document.getElementById("order_city").value,
+      email: document.getElementById("order_email").value,
+      phone: document.getElementById("order_phone").value,
+      orderInfo: cartContents
+    })
+  })
 }
 // Function for calling adminPanel API call, under development
 function AdminPanel() {

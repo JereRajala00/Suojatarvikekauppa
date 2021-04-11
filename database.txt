@@ -17,3 +17,13 @@ CREATE TABLE Customers (
     Phone varchar(15),
     Password varchar(300)
 );
+CREATE TABLE Orders (
+    FirstName varchar(15),
+    LastName varchar(30),
+    Address varchar(50),
+    Zip varchar(10),
+    City varchar(20),
+    Email varchar(50),
+    Phone varchar(15),
+    ProductInfoJSON varchar(5000)
+);

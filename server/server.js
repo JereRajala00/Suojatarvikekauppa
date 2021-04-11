@@ -7,10 +7,8 @@ var crypto = require('crypto');
 var app = express();
 var bodyParser = require('body-parser');
 const http = require('http');
-const { callbackify } = require('util');
+//const { callbackify } = require('util');
 var connected = false;
-const hostname = '127.0.0.1';
-const port = 5000;
 
 // Server listens port 5000 by default
 var server = app.listen(5000, function () {
@@ -24,12 +22,11 @@ var con = mysql.createConnection({
   user: "nodeserver@suojatarvikekauppa",
   password: "Sala8999",
   database: "suojatarvikekauppa",
-  port: 3306,
-  ssl: true
+  port: 3306
 });
 // Activate cookie_parser for signed cookies (needed for authentication)
-app.use(cors({origin: '*'}));
-app.use(cookie_parser('mysecretkey'));
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+//app.use(cookie_parser('mysecretkey'));
 // listProducts API method for fetching product information from database
 app.get('/listProducts', function (req, res) {
     if (connected == false) {
@@ -47,14 +44,20 @@ app.get('/listProducts', function (req, res) {
  // placeOrder API method for storing order information to database (under development)
  app.post('/placeOrder', function (req, res) {
   var createOrder = {
-    OrderID: req.body.firstname,
-    CustomerID: req.body.lastname,
-    // Planned parameters: OrderID, CustomerID, ProductID, ProductQuantity, Firstname, Lastname, Address, Zip, City, Country
-    ProductID: req.body.address
+    FirstName: req.body.firstname,
+    LastName: req.body.lastname,
+    Address: req.body.address,
+    Zip: req.body.zip,
+    City: req.body.city,
+    Phone: req.body.phone,
+    Email: req.body.email,
+    ProductInfoJSON: req.body.orderInfo
    }
    console.log(createOrder);
    con.query("INSERT INTO Orders SET ?", createOrder, function (err, response) {
-     res.send("Order successfully placed");
+     if (!err) {
+      res.send("Order successfully placed");
+     }
    });
  });
  // Function for hashing password using SHA-256
@@ -103,29 +106,18 @@ app.get('/listProducts', function (req, res) {
       res.send(`Database error: ${result}`);
     } else {
       if (result.length > 0 && loginCredentials.Password == result[0].Password) {
-        res.cookie('user', loginCredentials.Email, {signed: true});
+        res.setHeader('user', loginCredentials.Email);
         res.redirect("http://localhost:3000/");
       } else {
         res.send("Login failed: incorrect email or password");
       }
     }
   }
-  // adminPanel API method for accessing the control panel of web store
-  // currently under development
-  /*app.get('/adminPanel', function (req, res) {
-      var auth_cookie = req.signedCookies.user;
-      console.log(auth_cookie);
-      if (auth_cookie == 'admin@student.jamk.fi') {
-        res.send('Authentication successful');
-      } else {
-        res.send('ei toimi');
-      }
-  });*/
 });
 app.get('/getCustomerInfo', function (req, res) {
-  var username = req.signedCookies.user;
-  console.log(username);
-  if (username == undefined) {
+  //var username = req.signedCookies.user;
+  console.log(JSON.stringify(req.headers.user));
+  if (false) {
     res.send('You are not logged in. Log in to place the order');
   } else {
     con.query("SELECT FirstName, LastName, Address, Email, Phone FROM Customers WHERE Email =?", username, function(err, result) {
