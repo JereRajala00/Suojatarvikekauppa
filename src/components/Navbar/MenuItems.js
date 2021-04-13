@@ -6,7 +6,7 @@ const MenuItems = [
     },
     {
         title: 'Maskit',
-        url: '#',
+        url: './Masks.js',
         cName: 'nav-links'
     },
     {

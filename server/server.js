@@ -5,7 +5,6 @@ var cookie_parser = require('cookie-parser');
 var cors = require('cors');
 var crypto = require('crypto');
 var app = express();
-var bodyParser = require('body-parser');
 const http = require('http');
 //const { callbackify } = require('util');
 var connected = false;
@@ -26,16 +25,17 @@ var con = mysql.createConnection({
 });
 // Activate cookie_parser for signed cookies (needed for authentication)
 app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
-//app.use(cookie_parser('mysecretkey'));
 // listProducts API method for fetching product information from database
 app.get('/listProducts', function (req, res) {
     if (connected == false) {
       con.connect()
       connected = true;
     }
+        //if (err) throw err;
         con.query("SELECT * FROM Products", function (err, result, fields) {
+          //if (err) throw err;
           console.log(result);
-          res.send({ result });
+          res.send({ result })
         });
       
  })

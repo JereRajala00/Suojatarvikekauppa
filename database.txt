@@ -1,12 +1,12 @@
 CREATE DATABASE suojatarvikekauppa;
 USE suojatarvikekauppa;
-
 CREATE TABLE Products (
 ProductID int NOT NULL,
 ProductName varchar(255) NOT NULL,
 ProductDescription VARCHAR(2000) NOT NULL,
 ProductQuantity INT NOT NULL
 );
+<<<<<<< HEAD
 
 CREATE TABLE Customers (
     CustomerID int,
@@ -27,3 +27,5 @@ CREATE TABLE Orders (
     Phone varchar(15),
     ProductInfoJSON varchar(5000)
 );
+=======
+>>>>>>> Ella
