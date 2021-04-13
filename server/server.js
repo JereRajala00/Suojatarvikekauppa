@@ -7,9 +7,12 @@ var crypto = require('crypto');
 var app = express();
 const http = require('http');
 var bodyParser = require('body-parser');
-//const { callbackify } = require('util');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 var connected = false;
 
+dotenv.config();
+process.env.TOKEN_SECRET = '09f26e402586e2faa8da4c98a35f1b20d6b033c60';
 // Server listens port 5000 by default
 var server = app.listen(5000, function () {
     var host = server.address().address
@@ -43,24 +46,27 @@ app.get('/listProducts', function (req, res) {
  app.use(bodyParser.json());
  app.use(bodyParser.urlencoded({ extended: false }));
  // placeOrder API method for storing order information to database (under development)
- app.post('/placeOrder', function (req, res) {
-  var createOrder = {
-    FirstName: req.body.firstname,
-    LastName: req.body.lastname,
-    Address: req.body.address,
-    Zip: req.body.zip,
-    City: req.body.city,
-    Phone: req.body.phone,
-    Email: req.body.email,
-    ProductInfoJSON: req.body.orderInfo
-   }
-   console.log(createOrder);
-   con.query("INSERT INTO Orders SET ?", createOrder, function (err, response) {
+ app.post('/placeOrder', authenticateToken, function (req, res) {
+  
+   //console.log(createOrder);
+   con.query("INSERT INTO Orders SET ?", prepareOrder(req), function (err, response) {
      if (!err) {
       res.send("Order successfully placed");
      }
    });
  });
+ function prepareOrder(req) {
+  con.query("SELECT FirstName, LastName, Address, Email, Phone FROM Customers WHERE Email=?", req.user, function (err, response) {
+    return createOrder = {
+      FirstName: response.FirstName,
+      LastName: response.LastName,
+      Address: response.Address,
+      Email: response.Email,
+      Phone: response.Phone,
+      ProductInfoJSON: req.body.orderInfo
+    }
+  })
+ }
  // Function for hashing password using SHA-256
  function hashPassword(password_input) {
   return crypto.createHash("sha256").update(password_input).digest("hex");
@@ -85,10 +91,9 @@ app.get('/listProducts', function (req, res) {
  app.post('/login', function(req, res) {
   var loginCredentials = {
     Email: req.body.email,
-    Password: req.body.password,
+    Password: req.body.password
   }
   loginCredentials.Password = hashPassword(loginCredentials.Password);
-  console.log(loginCredentials);
   CheckPassword(loginCredentials, returnResult);
   // Function used by login API method to fetch password hash by email address from database
   function CheckPassword(loginCredentials, callback) {
@@ -107,17 +112,36 @@ app.get('/listProducts', function (req, res) {
       res.send(`Database error: ${result}`);
     } else {
       if (result.length > 0 && loginCredentials.Password == result[0].Password) {
-        res.setHeader('user', loginCredentials.Email);
-        res.redirect("http://localhost:3000/");
+        const token = generateAccessToken(loginCredentials.Email);
+        res.send({status:200,token:token});
       } else {
         res.send("Login failed: incorrect email or password");
       }
     }
   }
 });
+function generateAccessToken(username) {
+  return jwt.sign(username, process.env.TOKEN_SECRET);
+}
+function authenticateToken(req, res) {
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+
+  if (token == null) return res.send('Et ole kirjautunut sisään, kirjaudu sisään')
+
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+    console.log(err)
+
+    if (err) return res.sendStatus(403)
+
+    req.user = user
+
+    //next()
+  })
+}
 app.get('/getCustomerInfo', function (req, res) {
   //var username = req.signedCookies.user;
-  console.log(JSON.stringify(req.headers.user));
+  //console.log(JSON.stringify(req.headers.user));
   if (false) {
     res.send('You are not logged in. Log in to place the order');
   } else {
@@ -131,3 +155,8 @@ app.get('/getCustomerInfo', function (req, res) {
     });
   }
 });
+app.get('/admin', function (req, res) {
+  con.query("SELECT FirstName, LastName, Address, Email, Phone FROM Customers WHERE Email =?", username, function(err, result) {
+
+  })
+})

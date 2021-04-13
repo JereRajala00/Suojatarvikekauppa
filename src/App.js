@@ -32,6 +32,7 @@ function App() {
   const [products, setProducts] = useState([])
   const [isLoaded, setStateToLoaded] = useState(false)
   const [customerInfo, setCustomerInfo] = useState([])
+  const [authToken, setAuthToken] = useState()
   // Render content based on user choice
   return (
 
@@ -47,6 +48,7 @@ function App() {
             <li><button onClick={() => setSelectedItem('Etusivu')}>Etusivu</button></li>
             <li><button onClick={() => setSelectedItem('Maskit')}>Maskit</button></li>
             <li><button onClick={() => setSelectedItem('Käsidesit')}>Käsidesit</button></li>
+            <li><button onClick={() => setSelectedItem('Kirjaudu sisään')}>Kirjaudu sisään</button></li>
             </div>
 
             <Switch>
@@ -250,13 +252,13 @@ function App() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        firstname: document.getElementById("order_firstname").value,
+        /*firstname: document.getElementById("order_firstname").value,
         lastname: document.getElementById("order_lastname").value,
         address: document.getElementById("order_address").value,
         zip: document.getElementById("order_zip").value,
         city: document.getElementById("order_city").value,
         email: document.getElementById("order_email").value,
-        phone: document.getElementById("order_phone").value,
+        phone: document.getElementById("order_phone").value,*/
         orderInfo: cartContents
       })
     })
@@ -270,13 +272,6 @@ function App() {
     );
   }
   // Function for generating HTML form for account registration
-  function AdminPanel() {
-    return (
-      <form action="http://127.0.0.1:5000/adminPanel" method="get">
-      <input type="submit" value="Submit"/>
-      </form>
-    );
-  }
   function RegisterAccount() {
     return (
       <div>
@@ -302,15 +297,29 @@ function App() {
   function LoginForm() {
     return (
       <div>
-      <form action="http://127.0.0.1:5000/login" method="post">
       Sähköposti:<br/>
-      <input type="text" name="email"/><br/>
+      <input type="text" name="email" id="login_email"/><br/>
       Salasana:<br/>
-      <input type="password" name="password"/><br/>
-      <input type="submit" value="Submit"/>
-      </form>
+      <input type="password" name="password" id="login_password"/><br/>
+      <button onClick={() => Login()}>Kirjaudu sisään</button>
       </div>
     );
+  }
+  function Login() {
+    fetch('http://127.0.0.1:5000/login', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: document.getElementById("login_email").value,
+        password: document.getElementById("login_password").value
+      })
+    })
+    .then(res => res.json())
+    .then(response => setAuthToken(response))
+    .catch(error => console.error('Error:', error));
   }
 
   }
