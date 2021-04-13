@@ -6,6 +6,7 @@ var cors = require('cors');
 var crypto = require('crypto');
 var app = express();
 const http = require('http');
+var bodyParser = require('body-parser');
 //const { callbackify } = require('util');
 var connected = false;
 

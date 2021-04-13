@@ -44,9 +44,9 @@ function App() {
           {/*navigointi routerilla, yhdistetään jeren menuun myöhemmin */}
           <Router>
             <div className='navbar'>
-            <li><Link to="/">Etusivu </Link></li>
-            <li><Link to='/Masks'>Maskit</Link></li>
-            <li><Link to='/Desit'>Käsidesit</Link></li>
+            <li><button onClick={() => setSelectedItem('Etusivu')}>Etusivu</button></li>
+            <li><button onClick={() => setSelectedItem('Maskit')}>Maskit</button></li>
+            <li><button onClick={() => setSelectedItem('Käsidesit')}>Käsidesit</button></li>
             </div>
 
             <Switch>
@@ -81,10 +81,10 @@ function App() {
           </Router>
         </div>
         <div>
-          {MenuItems.MenuItems.map((item, index) => (
+          {/*MenuItems.MenuItems.map((item, index) => (
             <li key={index} onClick={() => setSelectedItem(item.title)}
             style={{cursor: "pointer"}}>{item.title}</li>
-          ))}
+          ))*/}
           {selectedItem && (
             <h1>{selectedItem}</h1>
           )}
