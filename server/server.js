@@ -4,15 +4,14 @@ var express = require('express');
 var cookie_parser = require('cookie-parser');
 var cors = require('cors');
 var crypto = require('crypto');
+var aesjs = require('aes-js');
 var app = express();
 const http = require('http');
 var bodyParser = require('body-parser');
-const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 var connected = false;
 
 dotenv.config();
-process.env.TOKEN_SECRET = '09f26e402586e2faa8da4c98a35f1b20d6b033c60';
 // Server listens port 5000 by default
 var server = app.listen(5000, function () {
     var host = server.address().address
@@ -46,8 +45,8 @@ app.get('/listProducts', function (req, res) {
  app.use(bodyParser.json());
  app.use(bodyParser.urlencoded({ extended: false }));
  // placeOrder API method for storing order information to database (under development)
- app.post('/placeOrder', authenticateToken, function (req, res) {
-  
+ app.post('/placeOrder', function (req, res) {
+  console.log(req.user);
    //console.log(createOrder);
    con.query("INSERT INTO Orders SET ?", prepareOrder(req), function (err, response) {
      if (!err) {
@@ -114,6 +113,7 @@ app.get('/listProducts', function (req, res) {
       if (result.length > 0 && loginCredentials.Password == result[0].Password) {
         const token = generateAccessToken(loginCredentials.Email);
         res.send({status:200,token:token});
+        // Korjaa tämä
       } else {
         res.send("Login failed: incorrect email or password");
       }
@@ -121,28 +121,26 @@ app.get('/listProducts', function (req, res) {
   }
 });
 function generateAccessToken(username) {
-  return jwt.sign(username, process.env.TOKEN_SECRET);
+  var key = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  var textBytes = aesjs.utils.utf8.toBytes(username);
+  var aesCtr = new aesjs.ModeOfOperation.ctr(key);
+  var encryptedBytes = aesCtr.encrypt(textBytes);
+  var encryptedHex = aesjs.utils.hex.fromBytes(encryptedBytes);
+  return encryptedHex;
 }
-function authenticateToken(req, res) {
-  const authHeader = req.headers['authorization']
-  const token = authHeader && authHeader.split(' ')[1]
-
-  if (token == null) return res.send('Et ole kirjautunut sisään, kirjaudu sisään')
-
-  jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-    console.log(err)
-
-    if (err) return res.sendStatus(403)
-
-    req.user = user
-
-    //next()
-  })
+function decryptAccessToken(token) {
+  var key = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  var encryptedBytes = aesjs.utils.hex.toBytes(token);
+  var aesCtr = new aesjs.ModeOfOperation.ctr(key);
+  var decryptedBytes = aesCtr.decrypt(encryptedBytes);
+  var decryptedText = aesjs.utils.utf8.fromBytes(decryptedBytes);
+  return decryptedText;
 }
-app.get('/getCustomerInfo', function (req, res) {
-  //var username = req.signedCookies.user;
-  //console.log(JSON.stringify(req.headers.user));
-  if (false) {
+app.post('/getCustomerInfo', function (req, res) {
+
+  var username = decryptAccessToken(req.body.AuthToken);
+  console.log(username);
+  if (username.length < 5) {
     res.send('You are not logged in. Log in to place the order');
   } else {
     con.query("SELECT FirstName, LastName, Address, Email, Phone FROM Customers WHERE Email =?", username, function(err, result) {

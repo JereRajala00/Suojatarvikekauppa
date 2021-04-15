@@ -32,6 +32,7 @@ function App() {
   const [products, setProducts] = useState([])
   const [isLoaded, setStateToLoaded] = useState(false)
   const [customerInfo, setCustomerInfo] = useState([])
+  const [customerInfoFetched, setCustomerInfoStateToFetched] = useState(false)
   const [authToken, setAuthToken] = useState()
   // Render content based on user choice
   return (
@@ -49,6 +50,7 @@ function App() {
             <li><button onClick={() => setSelectedItem('Maskit')}>Maskit</button></li>
             <li><button onClick={() => setSelectedItem('Käsidesit')}>Käsidesit</button></li>
             <li><button onClick={() => setSelectedItem('Kirjaudu sisään')}>Kirjaudu sisään</button></li>
+            <li><button onClick={() => setSelectedItem('Ostoskori')}>Ostoskori</button></li>
             </div>
 
             <Switch>
@@ -185,23 +187,35 @@ function App() {
           </div>
       );
   }
-  // Function for displaying shopping cart contents
-  function ShowCartContents() {
+  // Function for rendering the customer information
+  function ShowCustomerInfo() {
     // Convert object to string or JSON before rendering!
-    const state = useSelector((state) => state);
-    const cartContentsJSON = JSON.stringify(state);
+    //const state = useSelector((state) => state);
+    //const cartContentsJSON = JSON.stringify(state);
 
     return (
       <div>
-          <h2>Ostoskorin sisältö: {cartContentsJSON}</h2>
-          <button onClick={() => GetCustomerInfo()}>
-          Proceed
-          </button>
-        </div>
+          {customerInfo.map(customerInfo => 
+          <div>
+            <h2>{customerInfo.FirstName}</h2>
+            <h2>{customerInfo.LastName}</h2>
+            <h2>{customerInfo.Address}</h2>
+            <h2>{customerInfo.Email}</h2>
+            <h2>{customerInfo.Phone}</h2>
+          </div>
+          )}
+      </div>
+    );
+  }
+  function ShowCartContents() {
+    return (
+      <div>
+        <h2>{JSON.stringify(useSelector((state) => state))}</h2>
+      </div>
     );
   }
   // Function for fetching information of logged user
-  function GetCustomerInfo() {
+  /*function GetCustomerInfo() {
     fetch('http://127.0.0.1:5000/getCustomerInfo', {
       method: 'GET',
       credentials: 'include'
@@ -220,25 +234,32 @@ function App() {
             </h2>
           </div>
         );
-  }
+  }*/
   function PlaceOrder() {
+    if (!customerInfoFetched) {
+      fetch('http://127.0.0.1:5000/getCustomerInfo', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({AuthToken: authToken})
+      })
+      .then(res => res.json())
+      .then(response => setCustomerInfo(response))
+      .then(setCustomerInfoStateToFetched(true))
+      .catch(error => console.error('Error:', error));
+    }
     return (
       <div>
-      Etunimi:<br/>
-      <input type="text" name="firstname" id="order_firstname"/><br/>
-      Sukunimi:<br/>
-      <input type="text" name="lastname" id="order_lastname"/><br/>
-      Osoite:<br/>
-      <input type="text" name="address" id="order_address"/><br/>
-      Sähköposti:<br/>
-      <input type="text" name="email" id="order_email"/><br/>
-      Puhelin:<br/>
-      <input type="text" name="phone" id="order_phone"/><br/>
-      Postinumero:<br/>
-      <input type="number" name="zip" id="order_zip"/><br/>
-      Kaupunki:<br/>
-      <input type="text" name="city" id="order_city"/><br/>
-      <button onClick={() => SubmitOrder()}></button>
+        {(customerInfoFetched) &&
+          <div>
+            <ShowCartContents/>
+            <h2>Tarkista että tiedot ovat oikein:</h2>
+            <ShowCustomerInfo/>
+          </div>
+          }
+      <button onClick={() => SubmitOrder()}>Lähetä tilaus</button>
       </div>
     );
   }
@@ -318,7 +339,7 @@ function App() {
       })
     })
     .then(res => res.json())
-    .then(response => setAuthToken(response))
+    .then(response => setAuthToken(response.token))
     .catch(error => console.error('Error:', error));
   }
 
