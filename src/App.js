@@ -273,14 +273,8 @@ function App() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        /*firstname: document.getElementById("order_firstname").value,
-        lastname: document.getElementById("order_lastname").value,
-        address: document.getElementById("order_address").value,
-        zip: document.getElementById("order_zip").value,
-        city: document.getElementById("order_city").value,
-        email: document.getElementById("order_email").value,
-        phone: document.getElementById("order_phone").value,*/
-        orderInfo: cartContents
+        orderInfo: cartContents,
+        AuthToken: authToken
       })
     })
   }

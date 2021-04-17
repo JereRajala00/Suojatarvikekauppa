@@ -9,6 +9,8 @@ var app = express();
 const http = require('http');
 var bodyParser = require('body-parser');
 const dotenv = require('dotenv');
+const { resolve } = require('path');
+const { useState } = require('react');
 var connected = false;
 
 dotenv.config();
@@ -45,27 +47,46 @@ app.get('/listProducts', function (req, res) {
  app.use(bodyParser.json());
  app.use(bodyParser.urlencoded({ extended: false }));
  // placeOrder API method for storing order information to database (under development)
- app.post('/placeOrder', function (req, res) {
-  console.log(req.user);
-   //console.log(createOrder);
-   con.query("INSERT INTO Orders SET ?", prepareOrder(req), function (err, response) {
-     if (!err) {
-      res.send("Order successfully placed");
-     }
-   });
- });
- function prepareOrder(req) {
-  con.query("SELECT FirstName, LastName, Address, Email, Phone FROM Customers WHERE Email=?", req.user, function (err, response) {
-    return createOrder = {
-      FirstName: response.FirstName,
-      LastName: response.LastName,
-      Address: response.Address,
-      Email: response.Email,
-      Phone: response.Phone,
-      ProductInfoJSON: req.body.orderInfo
-    }
-  })
- }
+ var customerInfo;
+ var orderInfo;
+ var finalInfo;
+ app.post('/placeOrder', async function (req, res) {
+  orderInfo = req.body.orderInfo;
+  var username = decryptAccessToken(req.body.AuthToken);
+  var firstQuery = await prepareOrder(username);
+  con.query("INSERT INTO Orders SET ?", finalInfo, function (err, response) {
+      if (!err) {
+          console.log("Order successfully placed");
+          res.status(200).send("Order successfully placed");
+      } else {
+          console.log(err);
+          res.status(500).send("Error!");
+      }
+  });
+});
+// Function for fetching customer info from database for internal use
+function prepareOrder(username) {
+  return new Promise((resolve, reject) => {
+      con.query("SELECT FirstName, LastName, Address, Email, Phone FROM Customers WHERE Email=?", username, function (err, response) {
+          resolve(response);
+      })
+  }).then(resolve => setCustomerInfo(resolve))
+}
+// Function for preparing data to be inserted to database
+function setCustomerInfo(info) {
+  customerInfo = JSON.stringify(info);
+  customerInfo = JSON.parse(customerInfo);
+  orderInfo = JSON.parse(orderInfo);
+  finalInfo = {
+    FirstName: customerInfo[0].FirstName,
+    LastName: customerInfo[0].LastName,
+    Address: customerInfo[0].Address,
+    Email: customerInfo[0].Email,
+    Phone: customerInfo[0].Phone,
+    ProductInfoJSON: orderInfo
+  }
+  console.log(finalInfo);
+}
  // Function for hashing password using SHA-256
  function hashPassword(password_input) {
   return crypto.createHash("sha256").update(password_input).digest("hex");
