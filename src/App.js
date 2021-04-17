@@ -50,6 +50,7 @@ function App() {
             <li><button onClick={() => setSelectedItem('Maskit')}>Maskit</button></li>
             <li><button onClick={() => setSelectedItem('Käsidesit')}>Käsidesit</button></li>
             <li><button onClick={() => setSelectedItem('Kirjaudu sisään')}>Kirjaudu sisään</button></li>
+            <li><button onClick={() => setSelectedItem('Rekisteröidy')}>Rekisteröidy</button></li>
             <li><button onClick={() => setSelectedItem('Ostoskori')}>Ostoskori</button></li>
             </div>
 
@@ -85,10 +86,6 @@ function App() {
           </Router>
         </div>
         <div>
-          {/*MenuItems.MenuItems.map((item, index) => (
-            <li key={index} onClick={() => setSelectedItem(item.title)}
-            style={{cursor: "pointer"}}>{item.title}</li>
-          ))*/}
           {selectedItem && (
             <h1>{selectedItem}</h1>
           )}
@@ -200,6 +197,8 @@ function App() {
             <h2>{customerInfo.FirstName}</h2>
             <h2>{customerInfo.LastName}</h2>
             <h2>{customerInfo.Address}</h2>
+            <h2>{customerInfo.Zip}</h2>
+            <h2>{customerInfo.City}</h2>
             <h2>{customerInfo.Email}</h2>
             <h2>{customerInfo.Phone}</h2>
           </div>
@@ -297,6 +296,10 @@ function App() {
       <input type="text" name="lastname"/><br/>
       Osoite:<br/>
       <input type="text" name="address"/><br/>
+      Postinumero:<br/>
+      <input type="text" name="zip"/><br/>
+      Kaupunki:<br/>
+      <input type="text" name="city"/><br/>
       Sähköposti:<br/>
       <input type="text" name="email"/><br/>
       Puhelin:<br/>

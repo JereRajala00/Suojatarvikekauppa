@@ -67,7 +67,7 @@ app.get('/listProducts', function (req, res) {
 // Function for fetching customer info from database for internal use
 function prepareOrder(username) {
   return new Promise((resolve, reject) => {
-      con.query("SELECT FirstName, LastName, Address, Email, Phone FROM Customers WHERE Email=?", username, function (err, response) {
+      con.query("SELECT FirstName, LastName, Address, Zip, City, Email, Phone FROM Customers WHERE Email=?", username, function (err, response) {
           resolve(response);
       })
   }).then(resolve => setCustomerInfo(resolve))
@@ -81,6 +81,8 @@ function setCustomerInfo(info) {
     FirstName: customerInfo[0].FirstName,
     LastName: customerInfo[0].LastName,
     Address: customerInfo[0].Address,
+    Zip: customerInfo[0].Zip,
+    City: customerInfo[0].City,
     Email: customerInfo[0].Email,
     Phone: customerInfo[0].Phone,
     ProductInfoJSON: orderInfo
@@ -97,6 +99,8 @@ function setCustomerInfo(info) {
     FirstName: req.body.firstname,
     LastName: req.body.lastname,
     Address: req.body.address,
+    Zip: req.body.zip,
+    City: req.body.city,
     Email: req.body.email,
     Phone: req.body.phone,
     Password: req.body.password
@@ -164,7 +168,7 @@ app.post('/getCustomerInfo', function (req, res) {
   if (username.length < 5) {
     res.send('You are not logged in. Log in to place the order');
   } else {
-    con.query("SELECT FirstName, LastName, Address, Email, Phone FROM Customers WHERE Email =?", username, function(err, result) {
+    con.query("SELECT FirstName, LastName, Address, Zip, City, Email, Phone FROM Customers WHERE Email =?", username, function(err, result) {
       if (!err) {
         console.log(result);
         res.send(result);
