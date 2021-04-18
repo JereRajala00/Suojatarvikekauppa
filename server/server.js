@@ -57,10 +57,10 @@ app.get('/listProducts', function (req, res) {
   con.query("INSERT INTO Orders SET ?", finalInfo, function (err, response) {
       if (!err) {
           console.log("Order successfully placed");
-          res.status(200).send("Order successfully placed");
+          res.send({status:200,message:"Kiitos tilauksesta!"});
       } else {
           console.log(err);
-          res.status(500).send("Error!");
+          res.send({status:500,message:"Tilauksen tallentaminen epäonnistui."});
       }
   });
 });

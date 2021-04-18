@@ -36,6 +36,7 @@ function App() {
   const [authToken, setAuthToken] = useState()
   const [adminPanelInfo, setAdminPanelInfo] = useState()
   const [registerStatus, setRegisterStatus] = useState()
+  const [orderStatus, setOrderStatus] = useState()
   const serverIpAddress = window.location.hostname;
   // Render content based on user choice
   return (
@@ -143,12 +144,6 @@ function App() {
 
         Tuotteistamme löydät käsidesiä j kasvomaskeja.
         <br></br>
-        <br></br>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br></br>
-        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        <br></br>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br></br>
-        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
         </p>
         
         </div>
@@ -242,6 +237,10 @@ function App() {
           </div>
           }
       <button onClick={() => SubmitOrder()}>Lähetä tilaus</button>
+      <div>
+        {(orderStatus != undefined) &&
+        <h2>{orderStatus.message}</h2>}
+      </div>
       </div>
     );
   }
@@ -259,6 +258,9 @@ function App() {
         AuthToken: authToken.token
       })
     })
+    .then(res => res.json())
+    .then(response => setOrderStatus(response))
+    .catch(error => console.error('Error:', error));
   }
   // Function for calling adminPanel API call, under development
   function AdminPanel() {
