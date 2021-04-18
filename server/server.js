@@ -85,7 +85,7 @@ function setCustomerInfo(info) {
     City: customerInfo[0].City,
     Email: customerInfo[0].Email,
     Phone: customerInfo[0].Phone,
-    ProductInfoJSON: orderInfo
+    ProductInfoJSON: JSON.stringify(orderInfo)
   }
   console.log(finalInfo);
 }
@@ -138,7 +138,6 @@ function setCustomerInfo(info) {
       if (result.length > 0 && loginCredentials.Password == result[0].Password) {
         const token = generateAccessToken(loginCredentials.Email);
         res.send({status:200,token:token});
-        // Korjaa tämä
       } else {
         res.send("Login failed: incorrect email or password");
       }
@@ -178,8 +177,12 @@ app.post('/getCustomerInfo', function (req, res) {
     });
   }
 });
-app.get('/admin', function (req, res) {
-  con.query("SELECT FirstName, LastName, Address, Email, Phone FROM Customers WHERE Email =?", username, function(err, result) {
-
-  })
+app.post('/admin', function (req, res) {
+  if (decryptAccessToken(req.body.AuthToken) == "admin@jamk.fi") {
+    con.query("SELECT * FROM Orders", function(err, result) {
+      res.send(result);
+    })
+  } else {
+    res.send("Sinulla ei ole järjestelmänvalvojan oikeuksia tai et ole kirjautunut sisään.");
+  }
 })

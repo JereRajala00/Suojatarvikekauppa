@@ -34,6 +34,7 @@ function App() {
   const [customerInfo, setCustomerInfo] = useState([])
   const [customerInfoFetched, setCustomerInfoStateToFetched] = useState(false)
   const [authToken, setAuthToken] = useState()
+  const [adminPanelInfo, setAdminPanelInfo] = useState()
   // Render content based on user choice
   return (
 
@@ -52,6 +53,7 @@ function App() {
             <li><button onClick={() => setSelectedItem('Kirjaudu sisään')}>Kirjaudu sisään</button></li>
             <li><button onClick={() => setSelectedItem('Rekisteröidy')}>Rekisteröidy</button></li>
             <li><button onClick={() => setSelectedItem('Ostoskori')}>Ostoskori</button></li>
+            <li><button onClick={() => setSelectedItem('Admin')}>Järjestelmänvalvoja</button></li>
             </div>
 
             <Switch>
@@ -213,27 +215,6 @@ function App() {
       </div>
     );
   }
-  // Function for fetching information of logged user
-  /*function GetCustomerInfo() {
-    fetch('http://127.0.0.1:5000/getCustomerInfo', {
-      method: 'GET',
-      credentials: 'include'
-    })
-        .then((response) => response.json())
-        .then((response) => {
-          setCustomerInfo(response);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-        return (
-          <div>
-            <h2>
-              {customerInfo}
-            </h2>
-          </div>
-        );
-  }*/
   function PlaceOrder() {
     if (!customerInfoFetched) {
       fetch('http://127.0.0.1:5000/getCustomerInfo', {
@@ -279,10 +260,41 @@ function App() {
   }
   // Function for calling adminPanel API call, under development
   function AdminPanel() {
+    if (adminPanelInfo == undefined) {
+      fetch('http://127.0.0.1:5000/admin', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        AuthToken: authToken
+      })
+    })
+    .then(res => res.json())
+    .then(response => setAdminPanelInfo(response))
+    .catch(error => console.error('Error:', error));
+    }
     return (
-      <form action="http://127.0.0.1:5000/adminPanel" method="get">
-      <input type="submit" value="Submit"/>
-      </form>
+      <div>
+        {(adminPanelInfo != undefined) && 
+        <div>
+          <h1>Uusimmat tilaukset:</h1>
+          {adminPanelInfo.map(adminPanelInfo => 
+          <div>
+            <h2>{adminPanelInfo.FirstName}</h2>
+            <h2>{adminPanelInfo.LastName}</h2>
+            <h2>{adminPanelInfo.Address}</h2>
+            <h2>{adminPanelInfo.Zip}</h2>
+            <h2>{adminPanelInfo.City}</h2>
+            <h2>{adminPanelInfo.Email}</h2>
+            <h2>{adminPanelInfo.Phone}</h2>
+            <h2>{adminPanelInfo.ProductInfoJSON}</h2>
+          </div>
+          )}
+        </div>
+        }
+      </div>
     );
   }
   // Function for generating HTML form for account registration
