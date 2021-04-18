@@ -140,9 +140,9 @@ function setCustomerInfo(info) {
     } else {
       if (result.length > 0 && loginCredentials.Password == result[0].Password) {
         const token = generateAccessToken(loginCredentials.Email);
-        res.send({status:200,token:token});
+        res.send({status:200,token:token, message: "Kirjautuminen onnistui, tervetuloa!"});
       } else {
-        res.send("Login failed: incorrect email or password");
+        res.send({status:500, message: "Kirjautuminen epäonnistui: väärä käyttäjätunnus tai salasana"});
       }
     }
   }

@@ -224,7 +224,7 @@ function App() {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({AuthToken: authToken})
+        body: JSON.stringify({AuthToken: authToken.token})
       })
       .then(res => res.json())
       .then(response => setCustomerInfo(response))
@@ -255,7 +255,7 @@ function App() {
       },
       body: JSON.stringify({
         orderInfo: cartContents,
-        AuthToken: authToken
+        AuthToken: authToken.token
       })
     })
   }
@@ -269,7 +269,7 @@ function App() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        AuthToken: authToken
+        AuthToken: authToken.token
       })
     })
     .then(res => res.json())
@@ -362,6 +362,10 @@ function App() {
       Salasana:<br/>
       <input type="password" name="password" id="login_password"/><br/>
       <button onClick={() => Login()}>Kirjaudu sisään</button>
+      <div>
+        {(authToken != undefined) &&
+        <h2>{authToken.message}</h2>}
+      </div>
       </div>
     );
   }
@@ -378,7 +382,7 @@ function App() {
       })
     })
     .then(res => res.json())
-    .then(response => setAuthToken(response.token))
+    .then(response => setAuthToken(response))
     .catch(error => console.error('Error:', error));
   }
 
