@@ -35,6 +35,7 @@ function App() {
   const [customerInfoFetched, setCustomerInfoStateToFetched] = useState(false)
   const [authToken, setAuthToken] = useState()
   const [adminPanelInfo, setAdminPanelInfo] = useState()
+  const [registerStatus, setRegisterStatus] = useState()
   // Render content based on user choice
   return (
 
@@ -98,7 +99,7 @@ function App() {
             <div><PlaceOrder/></div>
           }
           {(selectedItem == 'Rekisteröidy') &&
-            <div><RegisterAccount/></div>
+            <div><RegisterForm/></div>
           }
           {(selectedItem == 'Kirjaudu sisään') &&
             <div><LoginForm/></div>
@@ -303,30 +304,54 @@ function App() {
     );
   }
   // Function for generating HTML form for account registration
-  function RegisterAccount() {
+  function RegisterForm() {
     return (
       <div>
-      <form action="http://127.0.0.1:5000/registerAccount" method="post">
       Etunimi:<br/>
-      <input type="text" name="firstname"/><br/>
+      <input type="text" name="firstname" id="register_firstname"/><br/>
       Sukunimi:<br/>
-      <input type="text" name="lastname"/><br/>
+      <input type="text" name="lastname" id="register_lastname"/><br/>
       Osoite:<br/>
-      <input type="text" name="address"/><br/>
+      <input type="text" name="address" id="register_address"/><br/>
       Postinumero:<br/>
-      <input type="text" name="zip"/><br/>
+      <input type="text" name="zip" id="register_zip"/><br/>
       Kaupunki:<br/>
-      <input type="text" name="city"/><br/>
+      <input type="text" name="city" id="register_city"/><br/>
       Sähköposti:<br/>
-      <input type="text" name="email"/><br/>
+      <input type="text" name="email" id="register_email"/><br/>
       Puhelin:<br/>
-      <input type="text" name="phone"/><br/>
+      <input type="text" name="phone" id="register_phone"/><br/>
       Salasana:<br/>
-      <input type="password" name="password"/><br/>
-      <input type="submit" value="Submit"/>
-      </form>
+      <input type="password" name="password" id="register_password"/><br/>
+      <button onClick={() => RegisterAccount()}>Lähetä</button>
+      <div>
+        {(registerStatus != undefined) &&
+        <div><h2>{registerStatus.message}</h2></div>}
+      </div>
       </div>
     );
+  }
+  function RegisterAccount() {
+    fetch('http://127.0.0.1:5000/registerAccount', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        firstname: document.getElementById("register_firstname").value,
+        lastname: document.getElementById("register_lastname").value,
+        address: document.getElementById("register_address").value,
+        zip: document.getElementById("register_zip").value,
+        city: document.getElementById("register_city").value,
+        email: document.getElementById("register_email").value,
+        phone: document.getElementById("register_phone").value,
+        password: document.getElementById("register_password").value
+      })
+    })
+    .then(res => res.json())
+    .then(response => setRegisterStatus(response))
+    .catch(error => console.error('Error:', error));
   }
   // Function for generating HTML form for account login
   function LoginForm() {

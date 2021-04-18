@@ -108,7 +108,10 @@ function setCustomerInfo(info) {
    createAccount.Password = hashPassword(createAccount.Password);
    console.log(createAccount);
    con.query("INSERT INTO Customers SET ?", createAccount, function (err, response) {
-     res.send("Account successfully created!");
+     if (err) {
+      res.send({status:500,message:"Käyttäjätilin rekisteröinti epäonnistui."});
+     }
+    res.send({status:200,message:"Käyttäjätili rekisteröity onnistuneesti."});
    });
  });
  // login API method for logging in to existing account
