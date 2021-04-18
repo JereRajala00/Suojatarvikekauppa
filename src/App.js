@@ -277,7 +277,7 @@ function App() {
     }
     return (
       <div>
-        {(adminPanelInfo != undefined) && 
+        {(adminPanelInfo != undefined && adminPanelInfo.status != 403) && 
         <div>
           <h1>Uusimmat tilaukset:</h1>
           {adminPanelInfo.map(adminPanelInfo => 
@@ -294,6 +294,11 @@ function App() {
           )}
         </div>
         }
+        <div>
+          {(adminPanelInfo != undefined && adminPanelInfo.status == 403) &&
+          <h2>{adminPanelInfo.message}</h2>
+          }
+        </div>
       </div>
     );
   }

@@ -178,11 +178,15 @@ app.post('/getCustomerInfo', function (req, res) {
   }
 });
 app.post('/admin', function (req, res) {
-  if (decryptAccessToken(req.body.AuthToken) == "admin@jamk.fi") {
-    con.query("SELECT * FROM Orders", function(err, result) {
-      res.send(result);
-    })
+  if (req.body.AuthToken != undefined) {
+    if (decryptAccessToken(req.body.AuthToken) == "admin@jamk.fi") {
+      con.query("SELECT * FROM Orders", function(err, result) {
+        res.send(result);
+      })
+    } else {
+      res.send({status:403,message:"Sinulla ei ole järjestelmänvalvojan oikeuksia"});
+    }
   } else {
-    res.send("Sinulla ei ole järjestelmänvalvojan oikeuksia tai et ole kirjautunut sisään.");
+    res.send({status:403,message:"Et ole kirjautunut sisään."});
   }
 })
