@@ -36,6 +36,7 @@ function App() {
   const [authToken, setAuthToken] = useState()
   const [adminPanelInfo, setAdminPanelInfo] = useState()
   const [registerStatus, setRegisterStatus] = useState()
+  const serverIpAddress = window.location.hostname;
   // Render content based on user choice
   return (
 
@@ -163,7 +164,7 @@ function App() {
     // Function for calling listProducts API method and returning result
     async function initProducts() {
       if (!isLoaded) {
-        fetch(`http://127.0.0.1:5000/listProducts`)
+        fetch('http://' + serverIpAddress + ':5000/listProducts')
         .then(response => response.json())
         .then(response => {
             setProducts(response.result);
@@ -218,7 +219,7 @@ function App() {
   }
   function PlaceOrder() {
     if (!customerInfoFetched) {
-      fetch('http://127.0.0.1:5000/getCustomerInfo', {
+      fetch('http://' + serverIpAddress + ':5000/getCustomerInfo', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -247,7 +248,7 @@ function App() {
   function SubmitOrder() {
     console.log(store.getState());
     const cartContents = JSON.stringify(store.getState());
-    fetch('http://127.0.0.1:5000/placeOrder', {
+    fetch('http://' + serverIpAddress + ':5000/placeOrder', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -262,7 +263,7 @@ function App() {
   // Function for calling adminPanel API call, under development
   function AdminPanel() {
     if (adminPanelInfo == undefined) {
-      fetch('http://127.0.0.1:5000/admin', {
+      fetch('http://' + serverIpAddress + ':5000/admin', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -332,7 +333,7 @@ function App() {
     );
   }
   function RegisterAccount() {
-    fetch('http://127.0.0.1:5000/registerAccount', {
+    fetch('http://' + serverIpAddress + ':5000/registerAccount', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -370,7 +371,7 @@ function App() {
     );
   }
   function Login() {
-    fetch('http://127.0.0.1:5000/login', {
+    fetch('http://' + serverIpAddress + ':5000/login', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
