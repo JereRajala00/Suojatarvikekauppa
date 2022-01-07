@@ -24,7 +24,7 @@ var server = app.listen(5000, function () {
 var con = mysql.createConnection({
   host: "suojatarvikekauppa.mysql.database.azure.com",
   user: "nodeserver@suojatarvikekauppa",
-  password: "Sala8999",
+  password: "mypassword",
   database: "suojatarvikekauppa",
   port: 3306
 });
